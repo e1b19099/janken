@@ -11,8 +11,37 @@
   <p>
   <div th:if="${name}">
     Hi [[${name}]]
+    <br>
+  </div>
+  <div>
+    <p>
+    <form action="/gu" method="post">
+      <input type="submit" value="ぐー">
+    </form>
+    </p>
+    <p>
+    <form action="/choki" method="post">
+      <input type="submit" value="ちょき">
+    </form>
+    </p>
+    <p>
+    <form action="/pa" method="post">
+      <input type="submit" value="ぱー">
+    </form>
+    </p>
+
+  </div>
+  <div th:if="${gu}">
+    あなたの手 gu<br>相手の手 choki<br>結果 You Win!<br>
   </div>
 
+  <div th:if="${choki}">
+    あなたの手 choki<br>相手の手 choki<br>結果 Draw<br>
+  </div>
+
+  <div th:if="${pa}">
+    あなたの手 pa<br>相手の手 choki<br>結果 You Lose<br>
+  </div>
 </body>
 
 </html>
