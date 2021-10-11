@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class Lec02Controller {
 
-
   /**
    * パスパラメータ2つをGETで受け付ける 1つ目の変数をparam1という名前で，2つ目の変数をparam2という名前で受け取る
    * GETで受け取った2つの変数とsample22()の引数の名前が同じなため， 引数の前に @PathVariable と付けるだけで，パスパラメータの値を
@@ -25,6 +24,11 @@ public class Lec02Controller {
    * @param name
    * @return
    */
+
+  @GetMapping("/lec02")
+  public String lec02() {
+    return "lec02.html";
+  }
 
   @PostMapping("/lec02/{name}")
   public String lec02(@RequestParam String name, ModelMap model) {
