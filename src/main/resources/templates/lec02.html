@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.springframework.org/schema/security">
+
+</html>
 
 <head>
   <meta charset="utf-8">
@@ -7,41 +9,35 @@
 </head>
 
 <body>
-  <h1>Lec02 GET!</h1>
-  <p>
-  <div th:if="${name}">
-    Hi [[${name}]]
-    <br>
-  </div>
-  <div>
-    <p>
-    <form action="/gu" method="post">
-      <input type="submit" value="ぐー">
-    </form>
-    </p>
-    <p>
-    <form action="/choki" method="post">
-      <input type="submit" value="ちょき">
-    </form>
-    </p>
-    <p>
-    <form action="/pa" method="post">
-      <input type="submit" value="ぱー">
-    </form>
-    </p>
+  <div><a href="/logout">ログアウト</a></div>
+  <h1>Hello GET!</h1><br>
+  エントリー<br>
 
+  <div th:if="${room}">
+    <ul>
+      <!--eachは所謂for each．この場合roomオブジェクトのusersフィールドにあるすべてのデータを一通り表示する
+      thが指定されているので[]が不要になる-->
+      <li th:each="user : ${room.users}">[[${user}]]</li>
+    </ul>
   </div>
+  Hi [[${login_user}]]<br>
+
   <div th:if="${gu}">
     あなたの手 gu<br>相手の手 choki<br>結果 You Win!<br>
   </div>
 
-  <div th:if="${choki}">
+  <div th:if="${ch}">
     あなたの手 choki<br>相手の手 choki<br>結果 Draw<br>
   </div>
 
   <div th:if="${pa}">
     あなたの手 pa<br>相手の手 choki<br>結果 You Lose<br>
   </div>
+
+  <a href="/gu">ぐー</a>
+  <a href="/ch">ちー</a>
+  <a href="/pa">ぱー</a>
+
 </body>
 
 </html>

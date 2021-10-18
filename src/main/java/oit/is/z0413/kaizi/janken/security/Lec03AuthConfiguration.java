@@ -12,7 +12,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 @EnableWebSecurity
 public class Lec03AuthConfiguration extends WebSecurityConfigurerAdapter {
-
   /**
    * 認証処理に関する設定（誰がログインできるか）
    */
@@ -22,8 +21,7 @@ public class Lec03AuthConfiguration extends WebSecurityConfigurerAdapter {
     // 平文のパスワードをエンコーダにかけてハッシュ化し，"user1"と関連付けている．ロール名は"USER"
     // プログラム中に素のパスワードが含まれることになるので望ましくない
     auth.inMemoryAuthentication().withUser("user1").password(passwordEncoder().encode("p@ss")).roles("USER");
-
-    auth.inMemoryAuthentication().withUser("user2").password(passwordEncoder().encode("pAss")).roles("USER");
+    auth.inMemoryAuthentication().withUser("user2").password(passwordEncoder().encode("1234")).roles("USER");
 
     // $ sshrun htpasswd -nbBC 10 admin adm1n
     // htpasswdでBCryptエンコードを行った後の文字列をパスワードとして指定している．
@@ -43,21 +41,12 @@ public class Lec03AuthConfiguration extends WebSecurityConfigurerAdapter {
   protected void configure(HttpSecurity http) throws Exception {
     // Spring Securityのフォームを利用してログインを行う
     http.formLogin();
-    // http://localhost:8080/lec02 で始まるURLへのアクセスはログインが必要
+    // http://localhost:8000/sample3 で始まるURLへのアクセスはログインが必要
     // antMatchers().authenticated がantMatchersへのアクセスに認証を行うことを示す
     // antMatchers()の他にanyRequest()と書くとあらゆるアクセス先を表現できる
     // authenticated()の代わりにpermitAll()と書くと認証処理が不要であることを示す
-    http.authorizeRequests().antMatchers("/lec02/**").authenticated();
-
-    // Spring Securityの機能を利用してログアウト．ログアウト時は http://localhost:8080/ に戻る
+    http.authorizeRequests().antMatchers("/lec02").authenticated();
+    // Spring Securityの機能を利用してログアウト．ログアウト時は http://localhost:8000/ に戻る
     http.logout().logoutSuccessUrl("/");
-
-    /**
-     * 以下2行はh2-consoleを利用するための設定なので，開発が完了したらコメントアウトすることが望ましい
-     * CSRFがONになっているとフォームが対応していないためアクセスできない
-     * HTTPヘッダのX-Frame-OptionsがDENYになるとiframeでlocalhostでのアプリが使えなくなるので，H2DBのWebクライアントのためだけにdisableにする必要がある
-     */
-    http.csrf().disable();
-    http.headers().frameOptions().disable();
   }
 }
