@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.springframework.org/schema/security">
 
-</html>
-
 <head>
   <meta charset="utf-8">
   <title>SpringBoot lec02</title>
@@ -13,13 +11,25 @@
   <h1>Hello GET!</h1><br>
   エントリー<br>
 
-  <div th:if="${room}">
+  <p th:if="${users}">
+  <div th:each="users,stat:${users}">
+    <tr>
+      <td>Index:[[${stat.index}]]</td>
+      <td>ID:[[${users.id}]]</td>
+      <td>ユーザ名:[[${users.name}]]</td>
+    </tr>
+  </div>
+  </p>
+
+  <!--<div th:if="${room}">
     <ul>
       <!--eachは所謂for each．この場合roomオブジェクトのusersフィールドにあるすべてのデータを一通り表示する
-      thが指定されているので[]が不要になる-->
+      thが指定されているので[]が不要になる--
       <li th:each="user : ${room.users}">[[${user}]]</li>
     </ul>
-  </div>
+  </div>-->
+
+
   Hi [[${login_user}]]<br>
 
   <div th:if="${gu}">
@@ -37,6 +47,7 @@
   <a href="/gu">ぐー</a>
   <a href="/ch">ちー</a>
   <a href="/pa">ぱー</a>
+
 
 </body>
 
