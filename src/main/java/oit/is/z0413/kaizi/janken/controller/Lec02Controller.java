@@ -54,59 +54,76 @@ public class Lec02Controller {
     model.addAttribute("room", this.room);
     ArrayList<User> users = userMapper.selectAll();
     model.addAttribute("users", users);
+    ArrayList<Match> match = matchMapper.selectAll();
+    model.addAttribute("match", match);
     return "lec02.html";
   }
 
   @PostMapping("result")
-  public String sample45(@RequestParam Integer id, Principal prin, ModelMap model) {
+  public String result(@RequestParam Integer id, @RequestParam Integer user2, Principal prin, ModelMap model) {
     String loginUser = prin.getName();
     this.room.addUser(loginUser);
     model.addAttribute("login_user", loginUser);
-    if (id == 1)
+    User user = userMapper.selectByname(loginUser);
+    int user1 = user.getId();
+    String user1Hand = "";
+    if (id == 1) {
       model.addAttribute("ch", loginUser);
-    if (id == 2)
+      user1Hand = "ch";
+    }
+    if (id == 2) {
       model.addAttribute("gu", loginUser);
-    if (id == 3)
+      user1Hand = "gu";
+    }
+    if (id == 3) {
       model.addAttribute("pa", loginUser);
-    ArrayList<User> users = userMapper.selectAll();
+      user1Hand = "pa";
+    }
+    User users = userMapper.selectById(user2);
     model.addAttribute("users", users);
-    ArrayList<Match> match = matchMapper.selectAllById(id);
-    model.addAttribute("match", match);
-    return "lec02.html";
+    Match match2 = new Match();
+    match2.setId(1);
+    match2.setUser1(user1);
+    match2.setUser2(user2);
+    match2.setUser1Hand(user1Hand);
+    match2.setUser2Hand("gu");
+    matchMapper.insertMatch(match2);
+    model.addAttribute("match", match2);
+    return "match.html";
 
   }
 
-  /*@GetMapping("gu")
-  public String gu(Principal prin, ModelMap model) {
+  @GetMapping("/match")
+  public String match(@RequestParam Integer id, Principal prin, ModelMap model) {
     String loginUser = prin.getName();
     this.room.addUser(loginUser);
     model.addAttribute("login_user", loginUser);
-    model.addAttribute("gu", loginUser);
-    model.addAttribute("room", this.room);
-
-    return "lec02.html";
+    User users = userMapper.selectById(id);
+    model.addAttribute("users", users);
+    return "match.html";
   }
 
-  @GetMapping("ch")
-  public String ch(Principal prin, ModelMap model) {
-    String loginUser = prin.getName();
-    this.room.addUser(loginUser);
-    model.addAttribute("login_user", loginUser);
-    model.addAttribute("ch", loginUser);
-    model.addAttribute("room", this.room);
-
-    return "lec02.html";
-  }
-
-  @GetMapping("pa")
-  public String pa(Principal prin, ModelMap model) {
-    String loginUser = prin.getName();
-    this.room.addUser(loginUser);
-    model.addAttribute("login_user", loginUser);
-    model.addAttribute("pa", loginUser);
-    model.addAttribute("room", this.room);
-
-    return "lec02.html";
-  }*/
+  /*
+   * @GetMapping("gu") public String gu(Principal prin, ModelMap model) { String
+   * loginUser = prin.getName(); this.room.addUser(loginUser);
+   * model.addAttribute("login_user", loginUser); model.addAttribute("gu",
+   * loginUser); model.addAttribute("room", this.room);
+   *
+   * return "lec02.html"; }
+   *
+   * @GetMapping("ch") public String ch(Principal prin, ModelMap model) { String
+   * loginUser = prin.getName(); this.room.addUser(loginUser);
+   * model.addAttribute("login_user", loginUser); model.addAttribute("ch",
+   * loginUser); model.addAttribute("room", this.room);
+   *
+   * return "lec02.html"; }
+   *
+   * @GetMapping("pa") public String pa(Principal prin, ModelMap model) { String
+   * loginUser = prin.getName(); this.room.addUser(loginUser);
+   * model.addAttribute("login_user", loginUser); model.addAttribute("pa",
+   * loginUser); model.addAttribute("room", this.room);
+   *
+   * return "lec02.html"; }
+   */
 
 }

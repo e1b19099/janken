@@ -16,8 +16,8 @@ public interface UserMapper {
   @Select("SELECT * from users where id = #{id}")
   User selectById(int id);
 
-  @Select("SELECT * from users where number = #{number}")
-  ArrayList<User> selectAllByNumber(int number);
+  @Select("SELECT * from users where name = #{name}")
+  User selectByname(String name);
 
   /**
    * #{user}などはinsertの引数にあるUserクラスのフィールドを表しています 引数に直接String userなどと書いてもいけるはず
