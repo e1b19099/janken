@@ -21,6 +21,39 @@
   </div>
   </p>
 
+  チョキ:1 グー:2 パー:3
+  <form th:action="@{/result}" method="post">
+    <input type="number" name="id" />
+    <input type="submit" value="選択"><input type="reset" value="リセット">
+  </form>
+
+
+  Hi [[${login_user}]]<br>
+
+  <div th:if="${ch}">
+    あなたの手 choki<br>相手の手 gu<br>結果 You Lose<br>
+  </div>
+
+  <div th:if="${gu}">
+    あなたの手 gu<br>相手の手 gu<br>結果 Draw<br>
+  </div>
+
+  <div th:if="${pa}">
+    あなたの手 pa<br>相手の手 gu<br>結果 You Win!<br>
+  </div>
+
+  <p th:if="${match}">
+  <div th:each="match,stat:${match}">
+    <tr>
+      <td>ID:[[${match.id}]]</td>
+      <td>USER1:[[${match.user1}]]</td>
+      <td>USER2:[[${match.user2}]]</td>
+      <td>USER1HAND:[[${match.user1Hand}]]</td>
+      <td>USER2HAND:[[${match.user2Hand}]]</td>
+    </tr>
+  </div>
+  </p>
+
   <!--<div th:if="${room}">
     <ul>
       <!--eachは所謂for each．この場合roomオブジェクトのusersフィールドにあるすべてのデータを一通り表示する
@@ -30,19 +63,7 @@
   </div>-->
 
 
-  Hi [[${login_user}]]<br>
 
-  <div th:if="${gu}">
-    あなたの手 gu<br>相手の手 choki<br>結果 You Win!<br>
-  </div>
-
-  <div th:if="${ch}">
-    あなたの手 choki<br>相手の手 choki<br>結果 Draw<br>
-  </div>
-
-  <div th:if="${pa}">
-    あなたの手 pa<br>相手の手 choki<br>結果 You Lose<br>
-  </div>
 
   <a href="/gu">ぐー</a>
   <a href="/ch">ちー</a>

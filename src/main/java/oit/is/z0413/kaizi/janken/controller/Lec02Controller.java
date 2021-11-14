@@ -9,13 +9,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 //import org.springframework.web.bind.annotation.PathVariable;
-//import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-//import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import oit.is.z0413.kaizi.janken.model.Entry;
 import oit.is.z0413.kaizi.janken.model.User;
 import oit.is.z0413.kaizi.janken.model.UserMapper;
+import oit.is.z0413.kaizi.janken.model.Match;
+import oit.is.z0413.kaizi.janken.model.MatchMapper;
 
 /**
  * /sample3へのリクエストを扱うクラス authenticateの設定をしていれば， /sample3へのアクセスはすべて認証が必要になる
@@ -29,6 +31,9 @@ public class Lec02Controller {
 
   @Autowired
   UserMapper userMapper;
+
+  @Autowired
+  MatchMapper matchMapper;
 
   /**
    *
@@ -52,7 +57,26 @@ public class Lec02Controller {
     return "lec02.html";
   }
 
-  @GetMapping("gu")
+  @PostMapping("result")
+  public String sample45(@RequestParam Integer id, Principal prin, ModelMap model) {
+    String loginUser = prin.getName();
+    this.room.addUser(loginUser);
+    model.addAttribute("login_user", loginUser);
+    if (id == 1)
+      model.addAttribute("ch", loginUser);
+    if (id == 2)
+      model.addAttribute("gu", loginUser);
+    if (id == 3)
+      model.addAttribute("pa", loginUser);
+    ArrayList<User> users = userMapper.selectAll();
+    model.addAttribute("users", users);
+    ArrayList<Match> match = matchMapper.selectAllById(id);
+    model.addAttribute("match", match);
+    return "lec02.html";
+
+  }
+
+  /*@GetMapping("gu")
   public String gu(Principal prin, ModelMap model) {
     String loginUser = prin.getName();
     this.room.addUser(loginUser);
@@ -83,6 +107,6 @@ public class Lec02Controller {
     model.addAttribute("room", this.room);
 
     return "lec02.html";
-  }
+  }*/
 
 }
