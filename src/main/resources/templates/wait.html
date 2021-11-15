@@ -8,23 +8,13 @@
 
 <body>
   <div><a href="/logout">ログアウト</a></div>
-  <h1>Lec02 GET!</h1><br>
-  Hi [[${login_user}]]<br>
-  <h1>エントリー</h1><br>
+  <h1>相手の手を待っています</h1><br>
+  Hi [[${login_user}]]
 
-  <p th:if="${users}">
-  <div th:each="users,stat:${users}">
-    <tr>
-      <li th:each="user : ${users}"><a th:href="@{/match(id=${user.id})}"> [[${user.name}]]</a></li>
-    </tr>
-  </div>
-  </p>
-
-  <h1>アクティブな試合</h1><br>
-
-  <h1>試合結果</h1><br>
   <p th:if="${match}">
+
   <div th:each="match,stat:${match}">
+    <h1>結果</h1><br>
     <tr>
       <td>ID:[[${match.id}]]</td>
       <td>USER1:[[${match.user1}]]</td>
