@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-//import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 //import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +18,8 @@ import oit.is.z0413.kaizi.janken.model.User;
 import oit.is.z0413.kaizi.janken.model.UserMapper;
 import oit.is.z0413.kaizi.janken.model.Match;
 import oit.is.z0413.kaizi.janken.model.MatchMapper;
+import oit.is.z0413.kaizi.janken.model.MatchInfo;
+import oit.is.z0413.kaizi.janken.model.MatchInfoMapper;
 
 /**
  * /sample3へのリクエストを扱うクラス authenticateの設定をしていれば， /sample3へのアクセスはすべて認証が必要になる
@@ -34,6 +36,9 @@ public class Lec02Controller {
 
   @Autowired
   MatchMapper matchMapper;
+
+  @Autowired
+  MatchInfoMapper matchInfoMapper;
 
   /**
    *
@@ -93,7 +98,7 @@ public class Lec02Controller {
 
   }
 
-  @GetMapping("/match")
+  @GetMapping("match")
   public String match(@RequestParam Integer id, Principal prin, ModelMap model) {
     String loginUser = prin.getName();
     this.room.addUser(loginUser);
@@ -101,6 +106,72 @@ public class Lec02Controller {
     User users = userMapper.selectById(id);
     model.addAttribute("users", users);
     return "match.html";
+  }
+
+  @GetMapping("wait/1")
+  @Transactional
+  public String wait1(@RequestParam Integer user2, Principal prin, ModelMap model) {
+    String loginUser = prin.getName();
+    this.room.addUser(loginUser);
+    model.addAttribute("login_user", loginUser);
+    User user = userMapper.selectByname(loginUser);
+    int user1 = user.getId();
+    model.addAttribute("ch", loginUser);
+    String user1Hand = "Choki";
+    User users = userMapper.selectById(user2);
+    model.addAttribute("users", users);
+    MatchInfo matchinfo = new MatchInfo();
+    matchinfo.setUser1(user1);
+    matchinfo.setUser2(user2);
+    matchinfo.setUser1Hand(user1Hand);
+    matchinfo.setisActive(true);
+    matchInfoMapper.insertMatchInfo(matchinfo);
+    model.addAttribute("matchinfo", matchinfo);
+    return "wait.html";
+  }
+
+  @GetMapping("wait/2")
+  @Transactional
+  public String wait2(@RequestParam Integer user2, Principal prin, ModelMap model) {
+    String loginUser = prin.getName();
+    this.room.addUser(loginUser);
+    model.addAttribute("login_user", loginUser);
+    User user = userMapper.selectByname(loginUser);
+    int user1 = user.getId();
+    model.addAttribute("gu", loginUser);
+    String user1Hand = "Gu";
+    User users = userMapper.selectById(user2);
+    model.addAttribute("users", users);
+    MatchInfo matchinfo = new MatchInfo();
+    matchinfo.setUser1(user1);
+    matchinfo.setUser2(user2);
+    matchinfo.setUser1Hand(user1Hand);
+    matchinfo.setisActive(true);
+    matchInfoMapper.insertMatchInfo(matchinfo);
+    model.addAttribute("matchinfo", matchinfo);
+    return "wait.html";
+  }
+
+  @GetMapping("wait/3")
+  @Transactional
+  public String wait(@RequestParam Integer user2, Principal prin, ModelMap model) {
+    String loginUser = prin.getName();
+    this.room.addUser(loginUser);
+    model.addAttribute("login_user", loginUser);
+    User user = userMapper.selectByname(loginUser);
+    int user1 = user.getId();
+    model.addAttribute("pa", loginUser);
+    String user1Hand = "Pa";
+    User users = userMapper.selectById(user2);
+    model.addAttribute("users", users);
+    MatchInfo matchinfo = new MatchInfo();
+    matchinfo.setUser1(user1);
+    matchinfo.setUser2(user2);
+    matchinfo.setUser1Hand(user1Hand);
+    matchinfo.setisActive(true);
+    matchInfoMapper.insertMatchInfo(matchinfo);
+    model.addAttribute("matchinfo", matchinfo);
+    return "wait.html";
   }
 
   /*
