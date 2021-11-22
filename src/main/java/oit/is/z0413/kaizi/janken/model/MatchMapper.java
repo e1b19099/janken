@@ -25,8 +25,8 @@ public interface MatchMapper {
    *
    * @param Match
    */
-  @Update("UPDATE Match SET user1=#{user1}, user2=#{user2} WHERE ID = #{id}")
-  void updateById(Match match);
+  @Update("UPDATE matches SET isActive = false WHERE ID = #{id}")
+  void updateFById(int id);
 
   @Insert("INSERT INTO matches (user1,user2,user1Hand,user2Hand,isActive) VALUES (#{user1},#{user2},#{user1Hand},#{user2Hand},#{isActive});")
   @Options(useGeneratedKeys = true, keyColumn = "id", keyProperty = "id")

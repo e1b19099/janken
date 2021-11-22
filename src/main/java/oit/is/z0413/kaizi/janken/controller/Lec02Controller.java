@@ -9,9 +9,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 //import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+//import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import oit.is.z0413.kaizi.janken.model.Entry;
 import oit.is.z0413.kaizi.janken.model.User;
@@ -20,6 +21,7 @@ import oit.is.z0413.kaizi.janken.model.Match;
 import oit.is.z0413.kaizi.janken.model.MatchMapper;
 import oit.is.z0413.kaizi.janken.model.MatchInfo;
 import oit.is.z0413.kaizi.janken.model.MatchInfoMapper;
+import oit.is.z0413.kaizi.janken.service.AsyncKekka;
 
 /**
  * /sample3へのリクエストを扱うクラス authenticateの設定をしていれば， /sample3へのアクセスはすべて認証が必要になる
@@ -40,6 +42,9 @@ public class Lec02Controller {
   @Autowired
   MatchInfoMapper matchInfoMapper;
 
+  @Autowired
+  AsyncKekka Kekka;
+
   /**
    *
    * @param model Thymeleafにわたすデータを保持するオブジェクト
@@ -59,43 +64,11 @@ public class Lec02Controller {
     model.addAttribute("room", this.room);
     ArrayList<User> users = userMapper.selectAll();
     model.addAttribute("users", users);
+    ArrayList<MatchInfo> matchInfo = matchInfoMapper.selectByisActive(true);
+    model.addAttribute("matchinfo", matchInfo);
     ArrayList<Match> match = matchMapper.selectAll();
     model.addAttribute("match", match);
     return "lec02.html";
-  }
-
-  @PostMapping("result")
-  public String result(@RequestParam Integer id, @RequestParam Integer user2, Principal prin, ModelMap model) {
-    String loginUser = prin.getName();
-    this.room.addUser(loginUser);
-    model.addAttribute("login_user", loginUser);
-    User user = userMapper.selectByname(loginUser);
-    int user1 = user.getId();
-    String user1Hand = "";
-    if (id == 1) {
-      model.addAttribute("ch", loginUser);
-      user1Hand = "ch";
-    }
-    if (id == 2) {
-      model.addAttribute("gu", loginUser);
-      user1Hand = "gu";
-    }
-    if (id == 3) {
-      model.addAttribute("pa", loginUser);
-      user1Hand = "pa";
-    }
-    User users = userMapper.selectById(user2);
-    model.addAttribute("users", users);
-    Match match2 = new Match();
-    match2.setId(1);
-    match2.setUser1(user1);
-    match2.setUser2(user2);
-    match2.setUser1Hand(user1Hand);
-    match2.setUser2Hand("gu");
-    matchMapper.insertMatch(match2);
-    model.addAttribute("match", match2);
-    return "match.html";
-
   }
 
   @GetMapping("match")
@@ -125,8 +98,13 @@ public class Lec02Controller {
     matchinfo.setUser2(user2);
     matchinfo.setUser1Hand(user1Hand);
     matchinfo.setisActive(true);
-    matchInfoMapper.insertMatchInfo(matchinfo);
-    model.addAttribute("matchinfo", matchinfo);
+    int id = Kekka.seachMatch(matchinfo);
+    if (id != 0) {
+      Match match = matchMapper.selectById(id);
+      model.addAttribute("match", match);
+    }
+    final SseEmitter sseEmitter = new SseEmitter();
+    Kekka.asyncShowMatchList(sseEmitter, id);
     return "wait.html";
   }
 
@@ -147,8 +125,13 @@ public class Lec02Controller {
     matchinfo.setUser2(user2);
     matchinfo.setUser1Hand(user1Hand);
     matchinfo.setisActive(true);
-    matchInfoMapper.insertMatchInfo(matchinfo);
-    model.addAttribute("matchinfo", matchinfo);
+    int id = Kekka.seachMatch(matchinfo);
+    if (id != 0) {
+      Match match = matchMapper.selectById(id);
+      model.addAttribute("match", match);
+    }
+    final SseEmitter sseEmitter = new SseEmitter();
+    Kekka.asyncShowMatchList(sseEmitter, id);
     return "wait.html";
   }
 
@@ -169,8 +152,13 @@ public class Lec02Controller {
     matchinfo.setUser2(user2);
     matchinfo.setUser1Hand(user1Hand);
     matchinfo.setisActive(true);
-    matchInfoMapper.insertMatchInfo(matchinfo);
-    model.addAttribute("matchinfo", matchinfo);
+    int id = Kekka.seachMatch(matchinfo);
+    if (id != 0) {
+      Match match = matchMapper.selectById(id);
+      model.addAttribute("match", match);
+    }
+    final SseEmitter sseEmitter = new SseEmitter();
+    Kekka.asyncShowMatchList(sseEmitter, id);
     return "wait.html";
   }
 
@@ -195,6 +183,22 @@ public class Lec02Controller {
    * loginUser); model.addAttribute("room", this.room);
    *
    * return "lec02.html"; }
+   *
+   * @PostMapping("result") public String result(@RequestParam Integer
+   * id, @RequestParam Integer user2, Principal prin, ModelMap model) { String
+   * loginUser = prin.getName(); this.room.addUser(loginUser);
+   * model.addAttribute("login_user", loginUser); User user =
+   * userMapper.selectByname(loginUser); int user1 = user.getId(); String
+   * user1Hand = ""; if (id == 1) { model.addAttribute("ch", loginUser); user1Hand
+   * = "ch"; } if (id == 2) { model.addAttribute("gu", loginUser); user1Hand =
+   * "gu"; } if (id == 3) { model.addAttribute("pa", loginUser); user1Hand = "pa";
+   * } User users = userMapper.selectById(user2); model.addAttribute("users",
+   * users); Match match2 = new Match(); match2.setId(1); match2.setUser1(user1);
+   * match2.setUser2(user2); match2.setUser1Hand(user1Hand);
+   * match2.setUser2Hand("gu"); matchMapper.insertMatch(match2);
+   * model.addAttribute("match", match2); return "match.html";
+   *
+   * }
    */
 
 }

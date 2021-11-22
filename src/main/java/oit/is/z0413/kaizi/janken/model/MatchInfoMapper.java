@@ -11,11 +11,17 @@ import org.apache.ibatis.annotations.Update;
 @Mapper
 public interface MatchInfoMapper {
 
+  @Select("SELECT * FROM matchinfo")
+  ArrayList<MatchInfo> selectAll();
+
+  @Select("SELECT * from matchinfo where isActive = #{isActive}")
+  ArrayList<MatchInfo> selectByisActive(boolean isActive);
+
   @Select("SELECT * from matchinfo where id = #{id}")
   MatchInfo selectById(int id);
 
-  @Select("SELECT * FROM matchinfo")
-  ArrayList<MatchInfo> selectAll();
+  @Select("SELECT * from matchinfo where user1 = #{user2} and user2 = #{user1} and isActive = true")
+  MatchInfo selectByuser(int user1, int user2);
 
   /**
    * #{user}などはinsertの引数にあるUserクラスのフィールドを表しています 引数に直接String userなどと書いてもいけるはず
@@ -25,8 +31,8 @@ public interface MatchInfoMapper {
    *
    * @param Match
    */
-  @Update("UPDATE Match SET user1=#{user1}, user2=#{user2} WHERE ID = #{id}")
-  void updateById(Match match);
+  @Update("UPDATE matchinfo SET isActive = false WHERE ID = #{id}")
+  void updateFById(int id);
 
   @Insert("INSERT INTO matchinfo (user1,user2,user1Hand,isActive) VALUES (#{user1},#{user2},#{user1Hand},#{isActive});")
   @Options(useGeneratedKeys = true, keyColumn = "id", keyProperty = "id")
