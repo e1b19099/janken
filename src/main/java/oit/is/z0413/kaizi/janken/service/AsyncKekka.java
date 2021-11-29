@@ -33,8 +33,8 @@ public class AsyncKekka {
   @Autowired
   MatchMapper mMapper;
 
-  public ArrayList<Match> syncShowMatchList() {
-    return mMapper.selectAll();
+  public ArrayList<Match> syncShowTMatchList() {
+    return mMapper.selectAllByisActive();
   }
 
   public ArrayList<MatchInfo> syncShowMatchInfoList() {
@@ -79,13 +79,14 @@ public class AsyncKekka {
     if (f == 0) {
       miMapper.insertMatchInfo(mi);
     } else {
+      // もし適したMatchInfoがあれば
       miMapper.updateFById(matchInfo.getId());
       Match match = new Match();
       match.setUser1(matchInfo.getUser1());
       match.setUser2(matchInfo.getUser2());
       match.setUser1Hand(matchInfo.getUser1Hand());
       match.setUser2Hand(mi.getUser1Hand());
-      match.setisActive(mi.getisActive());
+      match.setisActive(true);
       this.dbUpdated = true;
       mMapper.insertMatch(match);
       id = match.getId();
@@ -101,7 +102,7 @@ public class AsyncKekka {
    * @param emitter
    */
   @Async
-  public void asyncShowMatchList(SseEmitter emitter, Integer id) {
+  public void asyncShowMatchList(SseEmitter emitter) {
     dbUpdated = true;
     try {
       while (true) {// 無限ループ
@@ -111,13 +112,11 @@ public class AsyncKekka {
           continue;
         }
         // DBが更新されていれば更新後のリストを取得してsendし，1s休み，dbUpdatedをfalseにする
-        ArrayList<Match> match = this.syncShowMatchList();
+        ArrayList<Match> match = this.syncShowTMatchList();
         emitter.send(match);
-        ArrayList<MatchInfo> matchinfo = this.syncShowMatchInfoList();
-        emitter.send(matchinfo);
         TimeUnit.MILLISECONDS.sleep(1000);
         dbUpdated = false;
-        mMapper.updateFById(id);
+        mMapper.updateAllF();
       }
     } catch (Exception e) {
       // 例外の名前とメッセージだけ表示する

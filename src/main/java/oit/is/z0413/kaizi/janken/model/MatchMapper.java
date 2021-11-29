@@ -14,8 +14,14 @@ public interface MatchMapper {
   @Select("SELECT * from matches where id = #{id}")
   Match selectById(int id);
 
+  @Select("SELECT * from matches where id = #{id}")
+  ArrayList<Match> selectAllById(int id);
+
   @Select("SELECT * FROM matches")
   ArrayList<Match> selectAll();
+
+  @Select("SELECT * from matches where isActive = true")
+  ArrayList<Match> selectAllByisActive();
 
   /**
    * #{user}などはinsertの引数にあるUserクラスのフィールドを表しています 引数に直接String userなどと書いてもいけるはず
@@ -27,6 +33,9 @@ public interface MatchMapper {
    */
   @Update("UPDATE matches SET isActive = false WHERE ID = #{id}")
   void updateFById(int id);
+
+  @Update("UPDATE matches SET isActive = false")
+  void updateAllF();
 
   @Insert("INSERT INTO matches (user1,user2,user1Hand,user2Hand,isActive) VALUES (#{user1},#{user2},#{user1Hand},#{user2Hand},#{isActive});")
   @Options(useGeneratedKeys = true, keyColumn = "id", keyProperty = "id")

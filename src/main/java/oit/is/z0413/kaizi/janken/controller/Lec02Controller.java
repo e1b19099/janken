@@ -98,13 +98,14 @@ public class Lec02Controller {
     matchinfo.setUser2(user2);
     matchinfo.setUser1Hand(user1Hand);
     matchinfo.setisActive(true);
-    int id = Kekka.seachMatch(matchinfo);
+    int id = this.Kekka.seachMatch(matchinfo);
+    ArrayList<Match> match = matchMapper.selectAll();
+    model.addAttribute("match", match);
+
     if (id != 0) {
-      Match match = matchMapper.selectById(id);
+      match = matchMapper.selectAllById(id);
       model.addAttribute("match", match);
     }
-    final SseEmitter sseEmitter = new SseEmitter();
-    Kekka.asyncShowMatchList(sseEmitter, id);
     return "wait.html";
   }
 
@@ -125,13 +126,14 @@ public class Lec02Controller {
     matchinfo.setUser2(user2);
     matchinfo.setUser1Hand(user1Hand);
     matchinfo.setisActive(true);
-    int id = Kekka.seachMatch(matchinfo);
+    int id = this.Kekka.seachMatch(matchinfo);
+    ArrayList<Match> match = matchMapper.selectAll();
+    model.addAttribute("match", match);
+
     if (id != 0) {
-      Match match = matchMapper.selectById(id);
+      match = matchMapper.selectAllById(id);
       model.addAttribute("match", match);
     }
-    final SseEmitter sseEmitter = new SseEmitter();
-    Kekka.asyncShowMatchList(sseEmitter, id);
     return "wait.html";
   }
 
@@ -152,14 +154,28 @@ public class Lec02Controller {
     matchinfo.setUser2(user2);
     matchinfo.setUser1Hand(user1Hand);
     matchinfo.setisActive(true);
-    int id = Kekka.seachMatch(matchinfo);
+    int id = this.Kekka.seachMatch(matchinfo);
+    ArrayList<Match> match = matchMapper.selectAll();
+    model.addAttribute("match", match);
+
     if (id != 0) {
-      Match match = matchMapper.selectById(id);
+      match = matchMapper.selectAllById(id);
       model.addAttribute("match", match);
     }
-    final SseEmitter sseEmitter = new SseEmitter();
-    Kekka.asyncShowMatchList(sseEmitter, id);
+
     return "wait.html";
+  }
+
+  /**
+   * JavaScriptからEventSourceとして呼び出されるGETリクエスト SseEmitterを返すことで，PUSH型の通信を実現する
+   *
+   * @return
+   */
+  @GetMapping("/waiting")
+  public SseEmitter waiting() {
+    final SseEmitter sseEmitter = new SseEmitter();
+    this.Kekka.asyncShowMatchList(sseEmitter);
+    return sseEmitter;
   }
 
   /*
