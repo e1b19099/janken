@@ -4,6 +4,33 @@
 <head>
   <meta charset="utf-8">
   <title>SpringBoot lec02</title>
+  <script>
+    window.onload = function () {
+      var sse = new EventSource('/waiting');
+      sse.onmessage = function (event) {
+        console.log("sse.onmessage")
+        console.log(event.data);
+        var match_list = JSON.parse(event.data);//JSONオブジェクトとしてparse
+        var match_table = "";
+        // DBに残っているフルーツのリストがJSONオブジェクトとして得られるので，htmlを作成し，spanの中身毎入れ替える
+        var m_proc1 = "<h1>結果" + "</h1>" + "<br>";
+        var i = match_list.length - 1;
+        var idx = "<td>id:" + match_list[i].id + "</td>";
+        var m_user1 = "<td>user1:" + match_list[i].user1 + "</td>";
+        var m_user2 = "<td> user2:" + match_list[i].user2 + "</td>";
+        var m_user1Hand = "<td> user1Hand:" + match_list[i].user1Hand + "</td>";
+        var m_user2Hand = "<td> user2Hand:" + match_list[i].user2Hand + "</td>";
+        var m_proc2 = "<br>" + "<td>" + "<a href='/lec02'>もどる</a>" + "</td>";
+        match_table = match_table + m_proc1 + idx + m_user1 + m_user2 + m_user1Hand + m_user2Hand + m_proc2;
+
+
+        console.log(match_table);
+        var span = document.getElementById("match_list");
+        span.innerHTML = match_table;//idがmatch_listのspanのHTMLを差し替える
+
+      }
+    }
+  </script>
 </head>
 
 <body>
@@ -11,20 +38,15 @@
   <h1>相手の手を待っています</h1><br>
   Hi [[${login_user}]]
 
-  <p th:if="${match}">
+  <div th:if="${match}">
+    <span id="match_list">
 
-  <div th:each="match,stat:${match}">
-    <h1>結果</h1><br>
-    <tr>
-      <td>ID:[[${match.id}]]</td>
-      <td>USER1:[[${match.user1}]]</td>
-      <td>USER2:[[${match.user2}]]</td>
-      <td>USER1HAND:[[${match.user1Hand}]]</td>
-      <td>USER2HAND:[[${match.user2Hand}]]</td>
-    </tr>
-    <br><a href="/lec02">もどる</a>
+      <tr th:each="match,stat:${match}">
+
+      </tr>
+      <a href="/lec02">もどれq(^^)</a>
+    </span>
   </div>
-  </p>
 
 
 
